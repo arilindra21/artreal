@@ -1,0 +1,54 @@
+# IDE & Editor
+.history/
+.vscode/
+.claude/
+.idea/
+*.swp
+*.swo
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+.Python
+env/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Project files (generated per user)
+backend/projects/
+
+# Logs
+*.log
+npm-debug.log*
+visual_editor.log
+
+# Cache
+.cache/
+.parcel-cache/
+.pytest_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+nul
+backend/nul
+
+# Temporary files
+*.tmp
+*.temp
