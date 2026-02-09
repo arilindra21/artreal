@@ -8,7 +8,6 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONIOENCODING=utf-8
-ENV PORT=8080
 
 # Set working directory
 WORKDIR /app
@@ -17,7 +16,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     git \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -30,16 +28,21 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY . .
 
-# Create directories and set permissions
-RUN mkdir -p /app/projects && \
-    chmod -R 755 /app
+# Create non-root user for security
+RUN useradd --create-home --shell /bin/bash appuser && \
+    chown -R appuser:appuser /app
+USER appuser
 
-# Expose port
+# Create projects directory
+RUN mkdir -p /app/projects
+
+# Expose port (Cloud Run uses PORT env variable)
 EXPOSE 8080
 
-# Health check - give more time for startup
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:8080/health', timeout=5)" || exit 1
 
-# Run with uvicorn - log level info for debugging
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--log-level", "info"]
+# Run the application
+# Cloud Run sets PORT env variable, default to 8080
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
