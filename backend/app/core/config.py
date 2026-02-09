@@ -37,13 +37,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
     # CORS
-    BACKEND_CORS_ORIGINS: list = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://localhost:8080",
-        "http://localhost:8081",
-        "http://localhost:8082",
-    ]
+    BACKEND_CORS_ORIGINS: list = list = ["*"] 
 
     # Gemini-3 Flash API Configuration
     GEMINI_API_KEY: Optional[str] = None
