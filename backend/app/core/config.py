@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
     # CORS
-    BACKEND_CORS_ORIGINS: list = list = ["*"] 
+    BACKEND_CORS_ORIGINS: list = ["*"] 
 
     # Gemini-3 Flash API Configuration
     GEMINI_API_KEY: Optional[str] = None
