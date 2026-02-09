@@ -37,5 +37,9 @@ RUN mkdir -p /app/projects && \
 # Expose port
 EXPOSE 8080
 
-# Run the application directly with python for better error visibility
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Health check - give more time for startup
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Run with uvicorn - log level info for debugging
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--log-level", "info"]
